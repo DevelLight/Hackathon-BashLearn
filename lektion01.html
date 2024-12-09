@@ -133,14 +133,6 @@
             alert("Connection was dropped, because of inactivity! Please reload to continue!");
         };
 
-        var term = new window.Terminal({
-            cursorBlink: true,
-            theme: {
-                background: '#1e293b',
-                foreground: '#e2e8f0'
-            }
-        });
-
         term.open(document.getElementById('terminal'));
 
         function init() {
@@ -206,7 +198,7 @@
 
 
         // Aufgaben und Zustände
-        let tasks = [
+        let tasks = JSON.parse(sessionStorage.getItem('bashLessons')) || [
             { command: 'echo "Hello, Bash!"', completed: false },
             { command: 'mkdir mein_ordner', completed: false },
             { command: 'cd mein_ordner', completed: false }
@@ -250,6 +242,7 @@
             if (taskIndex !== -1 && !tasks[taskIndex].completed) {
                 tasks[taskIndex].completed = true;
                 updateTaskList();
+                saveProgressToSession();
                 updateProgress();
                 console.log(`Aufgabe erledigt: ${tasks[taskIndex].command}`);
             }
