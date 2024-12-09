@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bash Learning Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gradient-to-r from-slate-800 to-indigo-900">
+
+    <!-- Willkommens-Popup -->
+    <div id="welcomePopup" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-lg flex justify-center items-center z-50 hidden">
+        <div class="bg-gray-900 bg-opacity-70 tex backdrop-blur-lg shadow-lg p-6 max-w-sm w-full text-center">
+            <h2 class="text-2xl font-bold text-white">Willkommen auf der Bash Lernplattform!</h2>
+            <p class="text-gray-600 mt-4">Es freut uns, dass du hier bist. Beginne dein Lernabenteuer, indem du mit den grundlegenden Bash-Kommandos startest. Klicke einfach auf den 'Start' Button neben 'Lektion 1', um loszulegen. <br> <br> Bitte beachte, dass diese Plattform als Hackathon-Projekt entwickelt wurde und noch nicht vollständig fertiggestellt ist.</p>
+            <button id="closePopupButton" class="mt-6 px-4 py-2 bg-gray-900 bg-opacity-50 tex backdrop-blur-lg text-white rounded-sm hover:bg-blue-700 focus:outline-none">
+                Beginnen
+            </button>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Profilbereich -->
+            <div class="bg-gray-900 bg-opacity-50 tex backdrop-blur-lg rounded-sm shadow-lg p-6  transform transition-all duration-300">
+                <div class="flex items-center space-x-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-100">Bash Learner</h2>
+                        <p class="text-gray-300">Lerne Bash-Skripting interaktiv und spielerisch!</p>
+                    </div>
+                </div>
+
+
+                <!-- Gesamtfortschritt -->
+                <div class="mt-6">
+                    <h3 class="text-lg text-white font-semibold mb-3">Gesamtfortschritt</h3>
+                    <div class="w-full bg-gray-900 bg-opacity-50 tex backdrop-blur-lg rounded-lg h-3">
+                        <div id="overallProgressBar" class="bg-blue-600 h-3 rounded-lg" style="width: 0%"></div>
+                    </div>
+                    <p id="overallProgressText" class="text-sm text-white mt-2">0% abgeschlossen</p>
+                </div>
+            </div>
+
+            <!-- Lektionen Übersicht -->
+            <div class="bg-gray-900 bg-opacity-50 tex backdrop-blur-lg rounded-sm shadow-lg text-white p-6 md:col-span-2">
+                <h3 class="text-xl font-bold mb-4">Lektionen</h3>
+                <div id="lessonContainer" class="space-y-4"></div>
+            </div>
+
+            <!-- Statistiken
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-bold mb-4">Statistiken</h3>
+                <canvas id="learningChart"></canvas>
+            </div>
+            -->
+            
+            <!-- Achievements und Playground -->
+            <div class="grid grid-cols-2 gap-6 md:col-span-3">
+                <!-- Achievements -->
+                <div class="bg-gray-900 bg-opacity-50 tex backdrop-blur-lg rounded-sm shadow-lg text-white p-6">
+                    <h3 class="text-xl font-bold mb-4">Achievements</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <!-- Beispiel Achievements -->
+                        <div class="text-center">
+                            <div class="bg-gray-900 bg-opacity-50 tex backdrop-blur-lg rounded-full p-3 mx-auto w-16 h-16 flex items-center justify-center">🏆</div>
+                            <p class="text-sm mt-2">Starter</p>
+                        </div>
+                        <div class="text-center opacity-50">
+                            <div class="bg-gray-900 bg-opacity-50 tex backdrop-blur-lg rounded-full p-3 mx-auto w-16 h-16 flex items-center justify-center">💻</div>
+                            <p class="text-sm mt-2">Terminal Pro</p>
+                        </div>
+                        <div class="text-center opacity-50">
+                            <div class="bg-gray-900 bg-opacity-50 tex backdrop-blur-lg rounded-full p-3 mx-auto w-16 h-16 flex items-center justify-center">🚀</div>
+                            <p class="text-sm mt-2">Skript Master</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Playground Card -->
+                <div class="bg-gray-900 text-white bg-opacity-50 tex backdrop-blur-lg rounded-sm shadow-lg p-6">
+                    <h3 class="text-xl font-bold mb-4">Bash Playground</h3>
+                    <p class="mb-4">Nutzen Sie den Bash Playground, um mit Bash-Befehlen zu experimentieren und zu lernen. Es gibt keine Aufgaben, nur eine Umgebung, in der Sie sich frei austoben können!</p>
+                    <a href="playground.html" class="inline-block px-6 py-3 bg-gray-900 bg-opacity-50 tex backdrop-blur-lg text-white font-bold rounded-sm  text-center">
+                        Zum Playground
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <!--Footer container-->
+    <footer
+    class="flex flex-col items-center text-center text-surface ">
+    <div class="container pt-9">
+        <!-- Social media icons container -->
+        <div class="mb-6 flex justify-center space-x-2">
+
+        <a
+            href="https://github.com/DevelLight/Hackathon-BashLearn"
+            type="button"
+            class="rounded-full bg-transparent p-3 font-medium uppercase leading-normal text-surface transition duration-150 ease-in-out hover:bg-neutral-100 focus:outline-none focus:ring-0 dark:text-white"
+            data-twe-ripple-init>
+            <span class="mx-auto [&>svg]:h-5 [&>svg]:w-5">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 496 512">
+                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc. -->
+                <path
+                d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z" />
+            </svg>
+            </span>
+        </a>
+        </div>
+    </div>
+
+  <!--Copyright section-->
+  <div class="w-full bg-black/5 p-4 text-center">
+    © 2024 Copyright:
+    <a href="https://github.com/DevelLight/">Devellight & TheRedstoneDEV_DE</a>
+  </div>
+</footer>
+
+    <script>
+        const LESSONS_KEY = 'bashLessons';
+        const DEFAULT_LESSONS = [
+            { id: 'lektion01', title: 'Lektion 1: Bash Grundlagen', filename: 'lektion01.html', progress: 0, completedTasks: 0, totalTasks: 3 },
+            { id: 'lektion02', title: 'Lektion 2: Dateioperationen', filename: 'lektion02.html', progress: 0, completedTasks: 0, totalTasks: 3 }
+        ];
+
+        function saveLessons(lessons) {
+            sessionStorage.setItem(LESSONS_KEY, JSON.stringify(lessons));
+        }
+
+        function getLessons() {
+            const savedLessons = sessionStorage.getItem(LESSONS_KEY);
+            return savedLessons ? JSON.parse(savedLessons) : DEFAULT_LESSONS;
+        }
+
+        function initializeLessons() {
+            if (!sessionStorage.getItem(LESSONS_KEY)) {
+                saveLessons(DEFAULT_LESSONS);
+            }
+        }
+
+        function renderLessons() {
+            const lessons = getLessons();
+            const container = document.getElementById('lessonContainer');
+            container.innerHTML = '';
+
+            lessons.forEach(lesson => {
+                const lessonElement = document.createElement('div');
+                lessonElement.className = 'flex items-center justify-between text-white p-4 rounded-sm';
+                
+                lessonElement.innerHTML = `
+                    <div class="w-full">
+                        <h4 class="font-semibold">${lesson.title}</h4>
+                        <span class='text-sm text-gray-600'>${lesson.completedTasks}/${lesson.totalTasks} Aufgaben</span>
+                        <div class='w-full bg-gray-900 bg-opacity-50 tex backdrop-blur-lg rounded-full h-2'>
+                            <div class='bg-blue-500 h-2 rounded-full' style='width:${lesson.progress}%'></div>
+                        </div> 
+                    </div> 
+                    <a href='#' 
+                       class='ml-4 text-white p-2 bg-gray-900 bg-opacity-50 tex backdrop-blur-lg rounded-sm font-bold lesson-button' 
+                       data-id='${lesson.id}' 
+                       data-action='${lesson.progress === 100 ? 'reset' : 'start'}'>
+                       ${lesson.progress === 100 ? 'Wiederholen' : 'Starten'}
+                   </a>`;
+                
+                container.appendChild(lessonElement);
+            });
+
+            // Klick-Event für alle Buttons hinzufügen
+            document.querySelectorAll('.lesson-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const lessonId = button.getAttribute('data-id');
+                    const action = button.getAttribute('data-action');
+
+                    if (action === 'reset') {
+                        resetLesson(lessonId);
+                    } else {
+                        window.location.href = lessons.find(l => l.id === lessonId).filename;
+                    }
+                });
+            });
+
+            updateOverallProgress(lessons);
+        }
+
+        function resetLesson(lessonId) {
+            const lessons = getLessons();
+            const lesson = lessons.find(l => l.id === lessonId);
+
+            if (lesson) {
+                // Fortschritt und Aufgaben zurücksetzen
+                lesson.progress = 0;
+                lesson.completedTasks = 0;
+
+                // Session-Daten der Lektion entfernen
+                removeLessonSessionData(lessonId);
+
+                // Fortschritte speichern und neu rendern
+                saveLessons(lessons);
+                renderLessons();
+                updateOverallProgress(lessons);
+            }
+        }
+
+        function removeLessonSessionData(lessonId) {
+            if (lessonId === 'lektion01') {
+                sessionStorage.removeItem('tasks');
+            }
+        }
+
+        function updateOverallProgress(lessons) {
+            const totalProgress = lessons.reduce((sum, lesson) => sum + lesson.progress, 0) / lessons.length;
+            const progressBar = document.getElementById('overallProgressBar');
+            const progressText = document.getElementById('overallProgressText');
+            
+            progressBar.style.width = `${totalProgress}%`;
+            progressText.textContent = `${Math.round(totalProgress)}% abgeschlossen`;
+        }
+
+        function updateLearningChart() {
+            const lessons = getLessons();
+            const ctx = document.getElementById('learningChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: lessons.map(l => l.title),
+                    datasets: [{
+                        label: 'Lernfortschritt',
+                        data: lessons.map(l => l.progress),
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+         
+         // Überprüfen, ob der Benutzer die Seite bereits besucht hat
+         if (!localStorage.getItem('hasVisited')) {
+            // Zeige das Popup, wenn der Benutzer die Seite zum ersten Mal besucht
+            document.getElementById('welcomePopup').classList.remove('hidden');
+        }
+
+        // Wenn der Benutzer auf den "Willkommen!"-Button klickt
+        document.getElementById('closePopupButton').addEventListener('click', () => {
+            // Popup ausblenden
+            document.getElementById('welcomePopup').classList.add('hidden');
+            // Speichern, dass der Benutzer die Seite besucht hat
+            localStorage.setItem('hasVisited', 'true');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeLessons();
+            renderLessons();
+            updateLearningChart();
+        });
+    </script>
+</body>
+</html>
