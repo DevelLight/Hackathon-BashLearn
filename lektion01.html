@@ -198,7 +198,7 @@
 
 
         // Aufgaben und Zustände
-        let tasks = JSON.parse(sessionStorage.getItem('bashLessons')) || [
+        let tasks = JSON.parse(sessionStorage.getItem('tasks')) || [
             { command: 'echo "Hello, Bash!"', completed: false },
             { command: 'mkdir mein_ordner', completed: false },
             { command: 'cd mein_ordner', completed: false }
@@ -239,12 +239,12 @@
         // Aufgaben überprüfen
         function checkTask(input) {
             const taskIndex = tasks.findIndex(task => task.command === input);
-            if (taskIndex !== -1 && !tasks[taskIndex].completed) {
+            if (taskIndex != -1 && !tasks[taskIndex].completed) {
                 tasks[taskIndex].completed = true;
                 updateTaskList();
-                saveProgressToSession();
                 updateProgress();
                 console.log(`Aufgabe erledigt: ${tasks[taskIndex].command}`);
+                saveProgressToSession();
             }
         }
 
