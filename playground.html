@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bash Playground</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.min.css" />
+</head>
+<body class="bg-gray-100 h-full overflow-hidden">
+    <div class="flex h-full">
+        <!-- Linke Seite: Information -->
+        <div class="w-1/2 flex flex-col bg-white shadow-lg">
+            <div class="flex-grow overflow-y-auto p-6">
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">Bash Playground</h2>
+                <p class="mb-6 text-gray-700">Nutzen Sie dieses Terminal, um mit Bash-Befehlen zu experimentieren. Geben Sie Befehle ein und sehen Sie, wie sie ausgeführt werden. Viel Spaß beim Ausprobieren!</p>
+
+                <h3 class="text-xl font-semibold mb-4 text-blue-500">Beispiele:</h3>
+                <ul class="space-y-4">
+                    <li><code class="bg-gray-200 px-1 rounded">echo "Hallo, Bash!"</code> - Gibt eine Nachricht aus.</li>
+                    <li><code class="bg-gray-200 px-1 rounded">mkdir test_ordner</code> - Erstellt ein neues Verzeichnis.</li>
+                    <li><code class="bg-gray-200 px-1 rounded">ls</code> - Listet den Inhalt des aktuellen Verzeichnisses auf.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Rechte Seite: Terminal -->
+        <div class="w-1/2 flex flex-col bg-gray-800 overflow-hidden">
+            <div id="terminal" class="flex-grow p-4 overflow-hidden"></div>
+            <div class="flex justify-between p-4">
+                <a href="index.html" class="p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg">
+                    Zurück zur Übersicht
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.min.js"></script>
+    <script>
+        const socket = new WebSocket("wss://hackathon.robert-richter.org/websocket");
+
+        socket.onmessage = (event) => {
+            term.write(event.data);
+        };
+
+        socket.onerror = (event) => {
+            alert("ConnectionError occurred, please reload the page!\nAdditional Information: " + event.data);
+        };
+
+        socket.onclose = (event) => {
+            alert("Connection was dropped, because of inactivity! Please reload to continue!");
+        };
+
+        var term = new window.Terminal({
+            cursorBlink: true,
+            theme: {
+                background: '#1e293b',
+                foreground: '#e2e8f0'
+            }
+        });
+
+        term.open(document.getElementById('terminal'));
+
+        function init() {
+            if (term._initialized) {
+                return;
+            }
+            term._initialized = true;
+
+            let commandBuffer = "";
+            let cursorPosition = 0;
+
+            term.onData((data) => {
+                if (data === '\r') { // Enter key
+                    console.log("Befehl ausgeführt: " + commandBuffer);
+                    socket.send(commandBuffer + "\n"); // Befehle an WebSocket senden
+                    commandBuffer = ""; // Reset Buffer
+                    cursorPosition = 0; // Reset Cursor
+                } else if (data === '\u007F') { // Backspace
+                    if (commandBuffer.length > 0) {
+                        commandBuffer = commandBuffer.slice(0, -1); // Entferne letztes Zeichen
+                        term.write('\b \b'); // Visualisiere Löschung
+                    }
+                } else {
+                    commandBuffer += data; // Eingabe zwischenspeichern
+                    term.write(data); // Zeichen im Terminal anzeigen
+                }
+            });
+        }
+
+        init(); // Terminal initialisieren
+    </script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="de" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bash Tutorial - Lektion 2: Dateioperationen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.19.0/css/xterm.css" />
+</head>
+<body class="bg-gray-100 h-full overflow-hidden">
+    <div class="flex h-full">
+        <!-- Linke Seite: Lektionsinhalt -->
+        <div class="w-1/2 flex flex-col bg-white shadow-lg">
+            <div class="flex-grow overflow-y-auto p-6">
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">Lektion 2: Dateioperationen</h2>
+                
+                <!-- Einführung -->
+                <p class="mb-6 text-gray-700">
+                    In dieser Lektion lernen Sie grundlegende Dateioperationen in Bash kennen, wie das Erstellen, Löschen und Kopieren von Dateien und Verzeichnissen. Sie werden auch lernen, wie man Verzeichnisse und Dateien auflistet und Informationen über sie abruft.
+                </p>
+
+                <!-- Was sind Dateioperationen in Bash? -->
+                <h3 class="text-xl font-semibold mb-4 text-blue-500">Was sind Dateioperationen in Bash?</h3>
+                <p class="mb-6 text-gray-700">
+                    Bash ermöglicht es Ihnen, mit Dateien und Verzeichnissen auf verschiedene Weisen zu interagieren. Dies ist besonders wichtig, wenn Sie Aufgaben wie das Verwalten von Systemdateien oder das Automatisieren von Skripten durchführen. Zu den wichtigsten Dateioperationen gehören:
+                </p>
+                <ul class="list-disc list-inside mb-6 space-y-2 text-gray-700">
+                    <li><strong>Erstellen von Dateien und Verzeichnissen</strong>: Mit Befehlen wie <code>touch</code> und <code>mkdir</code> können Sie neue Dateien und Verzeichnisse erstellen.</li>
+                    <li><strong>Verwalten von Dateien</strong>: Mit Befehlen wie <code>cp</code> (kopieren), <code>mv</code> (verschieben/umbenennen) und <code>rm</code> (löschen) können Sie Dateien verwalten.</li>
+                    <li><strong>Auflisten von Dateien</strong>: Mit dem Befehl <code>ls</code> können Sie den Inhalt eines Verzeichnisses anzeigen und Informationen über Dateien erhalten.</li>
+                    <li><strong>Abfragen von Dateiinformationen</strong>: Mit Befehlen wie <code>ls -l</code> und <code>stat</code> können Sie detaillierte Informationen über Dateien und Verzeichnisse abrufen.</li>
+                </ul>
+
+                <!-- Lernziele -->
+                <h3 class="text-xl font-semibold mb-4 text-blue-500">Lernziele:</h3>
+                <ul class="list-disc list-inside mb-6 space-y-2 text-gray-700">
+                    <li>Erstellen und Löschen von Dateien und Verzeichnissen mit den Befehlen <code>touch</code>, <code>mkdir</code>, <code>rm</code> und <code>rmdir</code></li>
+                    <li>Verwenden von <code>ls</code> und <code>stat</code> zur Anzeige von Informationen über Dateien</li>
+                    <li>Verwenden von <code>cp</code> und <code>mv</code>, um Dateien zu kopieren und zu verschieben</li>
+                </ul>
+
+                <!-- Aufgaben -->
+                <h3 class="text-xl font-semibold mb-4 text-blue-500">Aufgaben:</h3>
+                <ul class="space-y-4" id="taskList">
+                    <li class="flex items-center task-item">
+                        <span class="mr-3 text-xl task-checkbox">☐</span>
+                        <span>Erstellen Sie eine Datei namens "test.txt" mit dem Befehl <code class="bg-gray-200 px-1 rounded">touch test.txt</code>.</span>
+                    </li>
+                    <li class="flex items-center task-item">
+                        <span class="mr-3 text-xl task-checkbox">☐</span>
+                        <span>Erstellen Sie ein Verzeichnis namens "test_dir" mit dem Befehl <code class="bg-gray-200 px-1 rounded">mkdir test_dir</code>.</span>
+                    </li>
+                    <li class="flex items-center task-item">
+                        <span class="mr-3 text-xl task-checkbox">☐</span>
+                        <span>Verwenden Sie den Befehl <code class="bg-gray-200 px-1 rounded">ls -l</code>, um detaillierte Informationen über "test.txt" anzuzeigen.</span>
+                    </li>
+                </ul>
+
+                <div id="helpSection" class="mt-6 bg-blue-50 p-4 rounded-lg hidden">
+                    <h4 class="font-semibold text-blue-700 mb-2">Hilfe</h4>
+                    <p class="text-blue-600">
+                        Tipp: Verwenden Sie <code>touch test.txt</code> um eine leere Datei zu erstellen. Nutzen Sie <code>ls -l</code>, um die Datei im Detail anzuzeigen.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex justify-between p-4">
+                <button id="helpButton" class="p-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition">
+                    Hilfe anzeigen
+                </button>
+                <button id="backButton" class="p-3 bg-gray-200 hover:bg-gray-300 transition duration-300 rounded-lg font-semibold">
+                    Zurück zur Übersicht
+                </button>
+            </div>
+        </div>
+      
+        <!-- Rechte Seite: Terminal -->
+        <div class="w-1/2 flex flex-col bg-gray-800">
+            <div id="terminal" class="flex-grow p-4"></div>
+            <div class="flex justify-between p-4">
+                <div id="progressDisplay" class="text-white text-sm">
+                    Fortschritt: 0/3 Aufgaben
+                </div>
+                <button id="nextLessonBtn" class="p-3 bg-blue-500 hover:bg-blue-600 transition duration-300 text-white rounded-lg font-semibold">
+                    Nächste Lektion
+                </button>
+            </div>
+        </div>
+    </div>
+  
+    <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.js"></script>
+<script>
+    var term = new window.Terminal({
+        cursorBlink: true,
+        theme: {
+            background: '#1e293b',
+            foreground: '#e2e8f0'
+        }
+    });
+
+    term.open(document.getElementById('terminal'));
+
+    function init() {
+        if (term._initialized) {
+            return;
+        }
+        term._initialized = true;
+
+        // Begrüßungsnachricht ausgeben
+        term.write("Willkommen zur Lektion 2: Dateioperationen\r\n");
+        term.write("$ "); // Prompt setzen
+
+        loadProgressFromSession(); // Fortschritt beim Start laden
+
+        let commandBuffer = "";
+        let cursorPosition = 0;
+
+        term.onData((data) => {
+            if (data === '\r') { // Enter key
+                console.log("Befehl ausgeführt: " + commandBuffer);
+                checkTask(commandBuffer); // Aufgabenprüfung
+                saveProgressToSession(); // Fortschritt speichern
+                commandBuffer = ""; // Reset Buffer
+                cursorPosition = 0; // Reset Cursor
+                term.write('\r\n$ '); // Zeilenumbruch
+            } else if (data === '\u007F') { // Backspace
+                if (commandBuffer.length > 0) {
+                    commandBuffer = commandBuffer.slice(0, -1); // Entferne letztes Zeichen
+                    term.write('\b \b'); // Visualisiere Löschung
+                }
+            } else {
+                commandBuffer += data; // Eingabe zwischenspeichern
+                term.write(data); // Zeichen im Terminal anzeigen
+            }
+        });
+    }
+
+    // Aufgaben und Zustände
+    let tasks = [
+        { command: 'touch test.txt', completed: false },
+        { command: 'mkdir test_dir', completed: false },
+        { command: 'ls -l test.txt', completed: false }
+    ];
+
+    // Fortschritt speichern
+    function saveProgressToSession() {
+        sessionStorage.setItem('tasks', JSON.stringify(tasks));
+
+        // Auch den Gesamtfortschritt für den Index speichern
+        const completedTasks = tasks.filter(task => task.completed).length;
+        const totalTasks = tasks.length;
+        const progress = (completedTasks / totalTasks) * 100;
+
+        // Gesamtfortschritt in der Index-Seite speichern
+        const lessons = JSON.parse(sessionStorage.getItem('bashLessons')) || [
+            { id: 'lektion01', title: 'Lektion 1: Bash Grundlagen', filename: 'lektion01.html', progress: 0, completedTasks: 0, totalTasks: 3 },
+            { id: 'lektion02', title: 'Lektion 2: Dateioperationen', filename: 'lektion02.html', progress: 0, completedTasks: 0, totalTasks: 3 }
+        ];
+
+        lessons[1].progress = progress; // Setze den Fortschritt für Lektion 2
+        lessons[1].completedTasks = completedTasks;
+
+        // Fortschritt in der Index-Seite speichern
+        sessionStorage.setItem('bashLessons', JSON.stringify(lessons));
+    }
+
+    // Fortschritt laden
+    function loadProgressFromSession() {
+        const savedTasks = sessionStorage.getItem('tasks');
+        if (savedTasks) {
+            tasks = JSON.parse(savedTasks);
+            updateTaskList();
+            updateProgress();
+        }
+    }
+
+    // Aufgaben überprüfen
+    function checkTask(input) {
+        const taskIndex = tasks.findIndex(task => task.command === input);
+        if (taskIndex !== -1 && !tasks[taskIndex].completed) {
+            tasks[taskIndex].completed = true;
+            updateTaskList();
+            updateProgress();
+            console.log(`Aufgabe erledigt: ${tasks[taskIndex].command}`);
+        }
+    }
+
+    // Aufgabenliste aktualisieren
+    function updateTaskList() {
+        const taskList = document.getElementById('taskList');
+        const checkboxes = taskList.getElementsByClassName('task-checkbox');
+        tasks.forEach((task, index) => {
+            if (task.completed) {
+                checkboxes[index].textContent = '✓';
+                checkboxes[index].classList.add('text-green-500');
+            }
+        });
+    }
+
+    // Fortschritt aktualisieren
+    function updateProgress() {
+        const completedTasks = tasks.filter(task => task.completed).length;
+        const progressDisplay = document.getElementById('progressDisplay');
+        progressDisplay.textContent = `Fortschritt: ${completedTasks}/${tasks.length} Aufgaben`;
+    }
+
+    document.getElementById('helpButton').addEventListener('click', () => {
+        document.getElementById('helpSection').classList.toggle('hidden');
+    });
+
+    document.getElementById('backButton').addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
+
+    document.getElementById('nextLessonBtn').addEventListener('click', () => {
+        window.location.href = 'lektion03.html';
+    });
+
+    init(); // Terminal initialisieren
+</script>
+
+</body>
+</html>
