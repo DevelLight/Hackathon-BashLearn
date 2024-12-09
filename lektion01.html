@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de" class="h-full">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,22 +8,31 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.19.0/css/xterm.css" />
 </head>
+
 <body class="bg-gray-100 h-full overflow-hidden">
     <div class="flex h-full">
         <!-- Linke Seite: Lektionsinhalt -->
         <div class="w-1/2 flex flex-col bg-white shadow-lg">
             <div class="flex-grow overflow-y-auto p-6">
                 <h2 class="text-3xl font-bold mb-6 text-blue-600">Lektion 1: Einführung in Bash</h2>
-                
+
                 <!-- Einführung -->
                 <p class="mb-6 text-gray-700">
-                    Bash (Bourne Again Shell) ist eine beliebte Kommandozeilen-Schnittstelle und eine Scriptsprache, die unter vielen Unix-ähnlichen Betriebssystemen, wie Linux und macOS, verwendet wird. Es wird hauptsächlich für das Automatisieren von Aufgaben und das Steuern des Betriebssystems verwendet. In dieser Lektion lernen Sie die grundlegenden Befehle und Konzepte von Bash kennen, die Ihnen helfen, effizient mit der Kommandozeile zu arbeiten.
+                    Bash (Bourne Again Shell) ist eine beliebte Kommandozeilen-Schnittstelle und eine Scriptsprache, die
+                    unter vielen Unix-ähnlichen Betriebssystemen, wie Linux und macOS, verwendet wird. Es wird
+                    hauptsächlich für das Automatisieren von Aufgaben und das Steuern des Betriebssystems verwendet. In
+                    dieser Lektion lernen Sie die grundlegenden Befehle und Konzepte von Bash kennen, die Ihnen helfen,
+                    effizient mit der Kommandozeile zu arbeiten.
                 </p>
-                
+
                 <!-- Was ist Bash und wofür wird es verwendet -->
                 <h3 class="text-xl font-semibold mb-4 text-blue-500">Was ist Bash?</h3>
                 <p class="mb-6 text-gray-700">
-                    Bash ist eine Unix-Shell, die ursprünglich von Brian Fox für das Projekt GNU entwickelt wurde und den Bourne Shell (sh) ersetzt hat. Es wird häufig als interaktive Shell verwendet, aber auch für das Erstellen von Scripts. Mit Bash können Sie mit dem Betriebssystem kommunizieren, indem Sie Befehle eingeben, die das System ausführt. Sie können mit Bash alles steuern, von einfachen Aufgaben wie dem Verwalten von Dateien bis hin zu komplexen Systemoperationen.
+                    Bash ist eine Unix-Shell, die ursprünglich von Brian Fox für das Projekt GNU entwickelt wurde und
+                    den Bourne Shell (sh) ersetzt hat. Es wird häufig als interaktive Shell verwendet, aber auch für das
+                    Erstellen von Scripts. Mit Bash können Sie mit dem Betriebssystem kommunizieren, indem Sie Befehle
+                    eingeben, die das System ausführt. Sie können mit Bash alles steuern, von einfachen Aufgaben wie dem
+                    Verwalten von Dateien bis hin zu komplexen Systemoperationen.
                 </p>
                 <p class="mb-6 text-gray-700">
                     Bash ist sehr mächtig und flexibel und wird in vielen Bereichen verwendet, darunter:
@@ -48,15 +58,18 @@
                 <ul class="space-y-4" id="taskList">
                     <li class="flex items-center task-item">
                         <span class="mr-3 text-xl task-checkbox">☐</span>
-                        <span>Verwenden Sie den <code class="bg-gray-200 px-1 rounded">echo</code> Befehl, um "Hello, Bash!" auszugeben.</span>
+                        <span>Verwenden Sie den <code class="bg-gray-200 px-1 rounded">echo</code> Befehl, um "Hello,
+                            Bash!" auszugeben.</span>
                     </li>
                     <li class="flex items-center task-item">
                         <span class="mr-3 text-xl task-checkbox">☐</span>
-                        <span>Erstellen Sie ein Verzeichnis namens "mein_ordner" mit dem <code class="bg-gray-200 px-1 rounded">mkdir</code> Befehl.</span>
+                        <span>Erstellen Sie ein Verzeichnis namens "mein_ordner" mit dem <code
+                                class="bg-gray-200 px-1 rounded">mkdir</code> Befehl.</span>
                     </li>
                     <li class="flex items-center task-item">
                         <span class="mr-3 text-xl task-checkbox">☐</span>
-                        <span>Wechseln Sie in das erstellte Verzeichnis mit dem <code class="bg-gray-200 px-1 rounded">cd</code> Befehl.</span>
+                        <span>Wechseln Sie in das erstellte Verzeichnis mit dem <code
+                                class="bg-gray-200 px-1 rounded">cd</code> Befehl.</span>
                     </li>
                 </ul>
 
@@ -74,12 +87,13 @@
                 <button id="helpButton" class="p-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition">
                     Hilfe anzeigen
                 </button>
-                <button id="backButton" class="p-3 bg-gray-200 hover:bg-gray-300 transition duration-300 rounded-lg font-semibold">
+                <button id="backButton"
+                    class="p-3 bg-gray-200 hover:bg-gray-300 transition duration-300 rounded-lg font-semibold">
                     Zurück zur Übersicht
                 </button>
             </div>
         </div>
-      
+
         <!-- Rechte Seite: Terminal -->
         <div class="w-1/2 flex flex-col bg-gray-800">
             <div id="terminal" class="flex-grow p-4"></div>
@@ -87,143 +101,194 @@
                 <div id="progressDisplay" class="text-white text-sm">
                     Fortschritt: 0/3 Aufgaben
                 </div>
-                <button id="nextLessonBtn" class="p-3 bg-blue-500 hover:bg-blue-600 transition duration-300 text-white rounded-lg font-semibold">
+                <button id="nextLessonBtn"
+                    class="p-3 bg-blue-500 hover:bg-blue-600 transition duration-300 text-white rounded-lg font-semibold">
                     Nächste Lektion
                 </button>
             </div>
         </div>
     </div>
-  
+
     <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.js"></script>
-<script>
-    var term = new window.Terminal({
-        cursorBlink: true,
-        theme: {
-            background: '#1e293b',
-            foreground: '#e2e8f0'
-        }
-    });
+    <script>
+        var term = new window.Terminal({
+            cursorBlink: true,
+            theme: {
+                background: '#1e293b',
+                foreground: '#e2e8f0'
+            }
+        });
 
-    term.open(document.getElementById('terminal'));
+        const socket = new WebSocket("wss://hackathon.robert-richter.org/w3bs0ck3t");
 
-    function init() {
-        if (term._initialized) {
-            return;
-        }
-        term._initialized = true;
+        socket.onmessage = (event) => {
+            term.write(event.data);
+        };
 
-        // Begrüßungsnachricht ausgeben
-        term.write("Willkommen zum Bash-Tutorial!\r\n");
-        term.write("$ "); // Prompt setzen
+        socket.onerror = (event) => {
+            alert("ConnectionError occurred, please reload the page!\nAdditional Information: " + event.data);
+        };
 
-        loadProgressFromSession(); // Fortschritt beim Start laden
+        socket.onclose = (event) => {
+            alert("Connection was dropped, because of inactivity! Please reload to continue!");
+        };
 
-        let commandBuffer = "";
-        let cursorPosition = 0;
+        var term = new window.Terminal({
+            cursorBlink: true,
+            theme: {
+                background: '#1e293b',
+                foreground: '#e2e8f0'
+            }
+        });
 
-        term.onData((data) => {
-            if (data === '\r') { // Enter key
-                console.log("Befehl ausgeführt: " + commandBuffer);
-                checkTask(commandBuffer); // Aufgabenprüfung
-                saveProgressToSession(); // Fortschritt speichern
-                commandBuffer = ""; // Reset Buffer
-                cursorPosition = 0; // Reset Cursor
-                term.write('\r\n$ '); // Zeilenumbruch
-            } else if (data === '\u007F') { // Backspace
-                if (commandBuffer.length > 0) {
-                    commandBuffer = commandBuffer.slice(0, -1); // Entferne letztes Zeichen
-                    term.write('\b \b'); // Visualisiere Löschung
+        term.open(document.getElementById('terminal'));
+
+        function init() {
+            if (term._initialized) {
+                return;
+            }
+            term._initialized = true;
+
+            loadProgressFromSession(); // Fortschritt beim Start laden
+
+            let commandBuffer = "";
+            let cursorPosition = 0;
+
+            term.onData((data) => {
+                if (data === '\r') { // Enter key
+                    checkTask(commandBuffer)
+                    commandBuffer = ""; // Reset the buffer
+                    cursorPosition = 0; // Reset the cursor
+                } else if (data === '\u001b[D') { // Left arrow (ANSI escape code)
+                    if (cursorPosition > 0) {
+                        cursorPosition--; // Move cursor left
+                    }
+                } else if (data === '\u001b[C') { // Right arrow (ANSI escape code)
+                    if (cursorPosition < commandBuffer.length) {
+                        cursorPosition++; // Move cursor right
+                    }
+                } else if (/^[\x20-\x7E]$/.test(data)) { // Printable characters
+                    // Insert the character at the current cursor position
+                    commandBuffer =
+                        commandBuffer.slice(0, cursorPosition) +
+                        data +
+                        commandBuffer.slice(cursorPosition);
+                    cursorPosition++; // Advance cursor position
+                } else if (data === '\u0008' || data === '\x7F') { // Backspace key
+                    if (cursorPosition > 0) {
+                        // Remove character before the cursor
+                        commandBuffer =
+                            commandBuffer.slice(0, cursorPosition - 1) +
+                            commandBuffer.slice(cursorPosition);
+                        cursorPosition--; // Move cursor back
+                    }
                 }
-            } else {
-                commandBuffer += data; // Eingabe zwischenspeichern
-                term.write(data); // Zeichen im Terminal anzeigen
-            }
-        });
-    }
+            });
 
-    // Aufgaben und Zustände
-    let tasks = [
-        { command: 'echo "Hello, Bash!"', completed: false },
-        { command: 'mkdir mein_ordner', completed: false },
-        { command: 'cd mein_ordner', completed: false }
-    ];
+            term.onKey(keyObj => {
+                runCommand(keyObj.key);
+            });
 
-    // Fortschritt speichern
-    function saveProgressToSession() {
-    sessionStorage.setItem('tasks', JSON.stringify(tasks));
-
-    // Berechne den Fortschritt der Lektion
-    const completedTasks = tasks.filter(task => task.completed).length;
-    const totalTasks = tasks.length;
-    const progress = (completedTasks / totalTasks) * 100;
-
-    const lessons = JSON.parse(sessionStorage.getItem('bashLessons')) || [
-        { id: 'lektion01', title: 'Lektion 1: Bash Grundlagen', filename: 'lektion01.html', progress: 0, completedTasks: 0, totalTasks: 3 },
-        { id: 'lektion02', title: 'Lektion 2: Dateioperationen', filename: 'lektion02.html', progress: 0, completedTasks: 0, totalTasks: 3 },
-        { id: 'lektion03', title: 'Lektion 3: Textverarbeitung und Umleitungen', filename: 'lektion03.html', progress: 0, completedTasks: 0, totalTasks: 4 }
-    ];
-
-    lessons[0].progress = progress;
-    lessons[0].completedTasks = completedTasks;
-
-    sessionStorage.setItem('bashLessons', JSON.stringify(lessons));
-}
-
-
-    // Fortschritt laden
-    function loadProgressFromSession() {
-        const savedTasks = sessionStorage.getItem('tasks');
-        if (savedTasks) {
-            tasks = JSON.parse(savedTasks);
-            updateTaskList();
-            updateProgress();
+            term.attachCustomKeyEventHandler((e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+                    navigator.clipboard.readText().then(text => {
+                        runCommand(text);
+                    });
+                    return false;
+                }
+                return true;
+            });
         }
-    }
 
-    // Aufgaben überprüfen
-    function checkTask(input) {
-        const taskIndex = tasks.findIndex(task => task.command === input);
-        if (taskIndex !== -1 && !tasks[taskIndex].completed) {
-            tasks[taskIndex].completed = true;
-            updateTaskList();
-            updateProgress();
-            console.log(`Aufgabe erledigt: ${tasks[taskIndex].command}`);
+        function runCommand(command) {
+            socket.send(command);
         }
-    }
 
-    // Aufgabenliste aktualisieren
-    function updateTaskList() {
-        const taskList = document.getElementById('taskList');
-        const checkboxes = taskList.getElementsByClassName('task-checkbox');
-        tasks.forEach((task, index) => {
-            if (task.completed) {
-                checkboxes[index].textContent = '✓';
-                checkboxes[index].classList.add('text-green-500');
+
+        // Aufgaben und Zustände
+        let tasks = [
+            { command: 'echo "Hello, Bash!"', completed: false },
+            { command: 'mkdir mein_ordner', completed: false },
+            { command: 'cd mein_ordner', completed: false }
+        ];
+
+        // Fortschritt speichern
+        function saveProgressToSession() {
+            sessionStorage.setItem('tasks', JSON.stringify(tasks));
+
+            // Berechne den Fortschritt der Lektion
+            const completedTasks = tasks.filter(task => task.completed).length;
+            const totalTasks = tasks.length;
+            const progress = (completedTasks / totalTasks) * 100;
+
+            const lessons = JSON.parse(sessionStorage.getItem('bashLessons')) || [
+                { id: 'lektion01', title: 'Lektion 1: Bash Grundlagen', filename: 'lektion01.html', progress: 0, completedTasks: 0, totalTasks: 3 },
+                { id: 'lektion02', title: 'Lektion 2: Dateioperationen', filename: 'lektion02.html', progress: 0, completedTasks: 0, totalTasks: 3 },
+                { id: 'lektion03', title: 'Lektion 3: Textverarbeitung und Umleitungen', filename: 'lektion03.html', progress: 0, completedTasks: 0, totalTasks: 4 }
+            ];
+
+            lessons[0].progress = progress;
+            lessons[0].completedTasks = completedTasks;
+
+            sessionStorage.setItem('bashLessons', JSON.stringify(lessons));
+        }
+
+
+        // Fortschritt laden
+        function loadProgressFromSession() {
+            const savedTasks = sessionStorage.getItem('tasks');
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks);
+                updateTaskList();
+                updateProgress();
             }
+        }
+
+        // Aufgaben überprüfen
+        function checkTask(input) {
+            const taskIndex = tasks.findIndex(task => task.command === input);
+            if (taskIndex !== -1 && !tasks[taskIndex].completed) {
+                tasks[taskIndex].completed = true;
+                updateTaskList();
+                updateProgress();
+                console.log(`Aufgabe erledigt: ${tasks[taskIndex].command}`);
+            }
+        }
+
+        // Aufgabenliste aktualisieren
+        function updateTaskList() {
+            const taskList = document.getElementById('taskList');
+            const checkboxes = taskList.getElementsByClassName('task-checkbox');
+            tasks.forEach((task, index) => {
+                if (task.completed) {
+                    checkboxes[index].textContent = '✓';
+                    checkboxes[index].classList.add('text-green-500');
+                }
+            });
+        }
+
+        // Fortschritt aktualisieren
+        function updateProgress() {
+            const completedTasks = tasks.filter(task => task.completed).length;
+            const progressDisplay = document.getElementById('progressDisplay');
+            progressDisplay.textContent = `Fortschritt: ${completedTasks}/${tasks.length} Aufgaben`;
+        }
+
+        document.getElementById('helpButton').addEventListener('click', () => {
+            document.getElementById('helpSection').classList.toggle('hidden');
         });
-    }
 
-    // Fortschritt aktualisieren
-    function updateProgress() {
-        const completedTasks = tasks.filter(task => task.completed).length;
-        const progressDisplay = document.getElementById('progressDisplay');
-        progressDisplay.textContent = `Fortschritt: ${completedTasks}/${tasks.length} Aufgaben`;
-    }
+        document.getElementById('backButton').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
 
-    document.getElementById('helpButton').addEventListener('click', () => {
-        document.getElementById('helpSection').classList.toggle('hidden');
-    });
+        document.getElementById('nextLessonBtn').addEventListener('click', () => {
+            window.location.href = 'lektion02.html';
+        });
 
-    document.getElementById('backButton').addEventListener('click', () => {
-        window.location.href = 'index.html';
-    });
-
-    document.getElementById('nextLessonBtn').addEventListener('click', () => {
-        window.location.href = 'lektion02.html';
-    });
-
-    init(); // Terminal initialisieren
-</script>
+        init(); // Terminal initialisieren
+    </script>
 
 </body>
+
 </html>

@@ -99,42 +99,83 @@
         }
     });
 
-    term.open(document.getElementById('terminal'));
+    const socket = new WebSocket("wss://hackathon.robert-richter.org/w3bs0ck3t");
 
-    function init() {
-        if (term._initialized) {
-            return;
-        }
-        term._initialized = true;
+        socket.onmessage = (event) => {
+            term.write(event.data);
+        };
 
-        // Begrüßungsnachricht ausgeben
-        term.write("Willkommen zur Lektion 2: Dateioperationen\r\n");
-        term.write("$ "); // Prompt setzen
+        socket.onerror = (event) => {
+            alert("ConnectionError occurred, please reload the page!\nAdditional Information: " + event.data);
+        };
 
-        loadProgressFromSession('lektion02'); // Fortschritt für Lektion 2 laden
+        socket.onclose = (event) => {
+            alert("Connection was dropped, because of inactivity! Please reload to continue!");
+        };
 
-        let commandBuffer = "";
-        let cursorPosition = 0;
+        term.open(document.getElementById('terminal'));
 
-        term.onData((data) => {
-            if (data === '\r') { // Enter key
-                console.log("Befehl ausgeführt: " + commandBuffer);
-                checkTask(commandBuffer, 'lektion02'); // Aufgabenprüfung
-                saveProgressToSession('lektion02'); // Fortschritt speichern
-                commandBuffer = ""; // Reset Buffer
-                cursorPosition = 0; // Reset Cursor
-                term.write('\r\n$ '); // Zeilenumbruch
-            } else if (data === '\u007F') { // Backspace
-                if (commandBuffer.length > 0) {
-                    commandBuffer = commandBuffer.slice(0, -1); // Entferne letztes Zeichen
-                    term.write('\b \b'); // Visualisiere Löschung
-                }
-            } else {
-                commandBuffer += data; // Eingabe zwischenspeichern
-                term.write(data); // Zeichen im Terminal anzeigen
+        function init() {
+            if (term._initialized) {
+                return;
             }
-        });
-    }
+            term._initialized = true;
+
+            loadProgressFromSession(); // Fortschritt beim Start laden
+
+            let commandBuffer = "";
+            let cursorPosition = 0;
+
+            term.onData((data) => {
+                if (data === '\r') { // Enter key
+                    checkTask(commandBuffer)
+                    commandBuffer = ""; // Reset the buffer
+                    cursorPosition = 0; // Reset the cursor
+                } else if (data === '\u001b[D') { // Left arrow (ANSI escape code)
+                    if (cursorPosition > 0) {
+                        cursorPosition--; // Move cursor left
+                    }
+                } else if (data === '\u001b[C') { // Right arrow (ANSI escape code)
+                    if (cursorPosition < commandBuffer.length) {
+                        cursorPosition++; // Move cursor right
+                    }
+                } else if (/^[\x20-\x7E]$/.test(data)) { // Printable characters
+                    // Insert the character at the current cursor position
+                    commandBuffer =
+                        commandBuffer.slice(0, cursorPosition) +
+                        data +
+                        commandBuffer.slice(cursorPosition);
+                    cursorPosition++; // Advance cursor position
+                } else if (data === '\u0008' || data === '\x7F') { // Backspace key
+                    if (cursorPosition > 0) {
+                        // Remove character before the cursor
+                        commandBuffer =
+                            commandBuffer.slice(0, cursorPosition - 1) +
+                            commandBuffer.slice(cursorPosition);
+                        cursorPosition--; // Move cursor back
+                    }
+                }
+            });
+
+            term.onKey(keyObj => {
+                runCommand(keyObj.key);
+            });
+
+            term.attachCustomKeyEventHandler((e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+                    navigator.clipboard.readText().then(text => {
+                        runCommand(text);
+                    });
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        function runCommand(command) {
+            socket.send(command);
+        }
+
 
     // Aufgaben und Zustände
     let tasks = [
