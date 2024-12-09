@@ -109,53 +109,7 @@
                 foreground: '#e2e8f0'
             }
         });
-
-        // Fortschritt speichern
-        function saveProgress() {
-            sessionStorage.setItem('tasks_' + lessonId, JSON.stringify(tasks));
-            updateProgressDisplay();
-        }
-
-        // Fortschritt laden
-        function loadProgress() {
-            const savedTasks = JSON.parse(sessionStorage.getItem('tasks_' + lessonId)) || tasks;
-            tasks.forEach((task, index) => {
-                tasks[index].completed = savedTasks[index]?.completed || false;
-            });
-            updateTaskList();
-        }
-
-        // Aufgabenprüfung
-        function checkTask(input) {
-            const normalizedInput = input.trim();
-            const task = tasks.find(t => t.command === normalizedInput);
-            if (task && !task.completed) {
-                task.completed = true;
-                updateTaskList();
-                saveProgress();
-                if (input === 'cat test.txt') {
-                   term.write('\r\nHallo, Welt!\r\n');
-            }
-              if (input === 'grep "Welt" test.txt') {
-                   term.write('\r\nHallo, ->Welt!\r\n');
-            }
-            }
-        }
-
-        // UI-Update
-        function updateTaskList() {
-            const taskList = document.getElementById('taskList');
-            taskList.querySelectorAll('.task-checkbox').forEach((checkbox, index) => {
-                checkbox.textContent = tasks[index].completed ? '✓' : '☐';
-                checkbox.classList.toggle('text-green-500', tasks[index].completed);
-            });
-        }
-
-        function updateProgressDisplay() {
-            const completed = tasks.filter(t => t.completed).length;
-            document.getElementById('progressDisplay').textContent = `Fortschritt: ${completed}/${tasks.length} Aufgaben`;
-        }
-
+        
         // Terminal-Initialisierung
        const socket = new WebSocket("wss://hackathon.robert-richter.org/w3bs0ck3t");
 
@@ -178,13 +132,14 @@
                 return;
             }
             term._initialized = true;
+            loadProgressFromSession('lektion03');
             let commandBuffer = "";
             let cursorPosition = 0;
 
             term.onData((data) => {
                 if (data === '\r') { // Enter key
-                    checkTask(commandBuffer);
-                    commandBuffer = ""; // Reset the buffer
+                    checkTask(commandBuffer,'lektion03');
+                    saveProgressToSession('lektion03'); // Reset the buffer
                     cursorPosition = 0; // Reset the cursor
                 } else if (data === '\u001b[D') { // Left arrow (ANSI escape code)
                     if (cursorPosition > 0) {
@@ -230,6 +185,72 @@
         function runCommand(command) {
             socket.send(command);
         }
+
+        // Fortschritt speichern
+    function saveProgressToSession(lessonId) {
+        // Speichern des Fortschritts für die spezifische Lektion
+        sessionStorage.setItem('tasks_' + lessonId, JSON.stringify(tasks));
+
+        // Berechne den Fortschritt der Lektion
+        const completedTasks = tasks.filter(task => task.completed).length;
+        const totalTasks = tasks.length;
+        const progress = (completedTasks / totalTasks) * 100;
+
+        const lessons = JSON.parse(sessionStorage.getItem('bashLessons')) || [
+            { id: 'lektion01', title: 'Lektion 1: Bash Grundlagen', filename: 'lektion01.html', progress: 0, completedTasks: 0, totalTasks: 3 },
+            { id: 'lektion02', title: 'Lektion 2: Dateioperationen', filename: 'lektion02.html', progress: 0, completedTasks: 0, totalTasks: 3 },
+            { id: 'lektion03', title: 'Lektion 3: Textverarbeitung und Umleitungen', filename: 'lektion03.html', progress: 0, completedTasks: 0, totalTasks: 4 }
+        ];
+
+        // Update für die richtige Lektion
+        const lesson = lessons.find(lesson => lesson.id === lessonId);
+        if (lesson) {
+            lesson.progress = progress;
+            lesson.completedTasks = completedTasks;
+        }
+
+        sessionStorage.setItem('bashLessons', JSON.stringify(lessons));
+    }
+
+    // Fortschritt laden
+    function loadProgressFromSession(lessonId) {
+        const savedTasks = sessionStorage.getItem('tasks_' + lessonId);
+        if (savedTasks) {
+            tasks = JSON.parse(savedTasks);
+            updateTaskList();
+            updateProgress();
+        }
+    }
+
+    // Aufgaben überprüfen
+    function checkTask(input, lessonId) {
+        const taskIndex = tasks.findIndex(task => task.command === input);
+        if (taskIndex !== -1 && !tasks[taskIndex].completed) {
+            tasks[taskIndex].completed = true;
+            updateTaskList();
+            updateProgress();
+            console.log(`Aufgabe erledigt: ${tasks[taskIndex].command}`);
+        }
+    }
+
+    // Aufgabenliste aktualisieren
+    function updateTaskList() {
+        const taskList = document.getElementById('taskList');
+        const checkboxes = taskList.getElementsByClassName('task-checkbox');
+        tasks.forEach((task, index) => {
+            if (task.completed) {
+                checkboxes[index].textContent = '✓';
+                checkboxes[index].classList.add('text-green-500');
+            }
+        });
+    }
+
+    // Fortschritt aktualisieren
+    function updateProgress() {
+        const completedTasks = tasks.filter(task => task.completed).length;
+        const progressDisplay = document.getElementById('progressDisplay');
+        progressDisplay.textContent = `Fortschritt: ${completedTasks}/${tasks.length} Aufgaben`;
+    }
         
         document.getElementById('helpButton').addEventListener('click', () => {
             alert('Verwenden Sie die genannten Befehle, um die Aufgaben zu lösen.');
