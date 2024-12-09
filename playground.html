@@ -99,6 +99,10 @@
             });
         }
 
+        function runCommand(command) {
+            socket.send(command);
+        }
+
         init(); // Terminal initialisieren
     </script>
 </body>
