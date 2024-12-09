@@ -95,7 +95,7 @@
     <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.js"></script>
     <script>
         const lessonId = 'lektion03';
-        const tasks = [
+        var tasks = [
             { command: 'touch test.txt', completed: false },
             { command: 'echo "Hallo, Welt!" > test.txt', completed: false },
             { command: 'cat test.txt', completed: false },
@@ -138,8 +138,10 @@
 
             term.onData((data) => {
                 if (data === '\r') { // Enter key
+                    console.log("command: "+commandBuffer);
                     checkTask(commandBuffer,'lektion03');
                     saveProgressToSession('lektion03'); // Reset the buffer
+                    commandBuffer = "";
                     cursorPosition = 0; // Reset the cursor
                 } else if (data === '\u001b[D') { // Left arrow (ANSI escape code)
                     if (cursorPosition > 0) {
@@ -266,7 +268,6 @@
 
         // Initialisierung
         init();
-        updateProgressDisplay();
     </script>
 </body>
 </html>
