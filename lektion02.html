@@ -201,9 +201,6 @@
             { id: 'lektion03', title: 'Lektion 3: Textverarbeitung und Umleitungen', filename: 'lektion03.html', progress: 0, completedTasks: 0, totalTasks: 4 }
         ];
 
-        lessons[0].progress = progress;
-        lessons[0].completedTasks = completedTasks;
-
         // Update für die richtige Lektion
         const lesson = lessons.find(lesson => lesson.id === lessonId);
         if (lesson) {
