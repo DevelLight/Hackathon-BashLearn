@@ -213,6 +213,8 @@
         function removeLessonSessionData(lessonId) {
             if (lessonId === 'lektion01') {
                 sessionStorage.removeItem('tasks');
+            } else{
+                sessionStorage.removeItem("tasks_"+lessonId);
             }
         }
 
