@@ -228,10 +228,6 @@
             tasks[taskIndex].completed = true;
             updateTaskList();
             updateProgress();
-
-            if (input === 'ls -l test.txt') {
-            term.write('\r\n-rw-r--r--  1 user group 1024 Dec  9 12:34 test.txt\r\n');
-            } 
             console.log(`Aufgabe erledigt: ${tasks[taskIndex].command}`);
         }
     }
