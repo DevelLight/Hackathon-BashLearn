@@ -73,19 +73,34 @@
             term.onData((data) => {
                 if (data === '\r') { // Enter key
                     console.log("Befehl ausgeführt: " + commandBuffer);
-                    socket.send(commandBuffer + "\n"); // Befehle an WebSocket senden
                     commandBuffer = ""; // Reset Buffer
                     cursorPosition = 0; // Reset Cursor
                 } else if (data === '\u007F') { // Backspace
                     if (commandBuffer.length > 0) {
                         commandBuffer = commandBuffer.slice(0, -1); // Entferne letztes Zeichen
-                        term.write('\b \b'); // Visualisiere Löschung
                     }
                 } else {
                     commandBuffer += data; // Eingabe zwischenspeichern
-                    term.write(data); // Zeichen im Terminal anzeigen
                 }
             });
+
+            term.onKey(keyObj => {
+                runCommand(keyObj.key);
+            });
+            
+            term.attachCustomKeyEventHandler((e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+                    navigator.clipboard.readText().then(text => {
+                        runCommand(text);
+                    });
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        function runCommand(command) {
+            socket.send(command);
         }
 
         init(); // Terminal initialisieren
