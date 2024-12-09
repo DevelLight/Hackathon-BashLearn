@@ -129,6 +129,7 @@
             term.onData((data) => {
                 if (data === '\r') { // Enter key
                     checkTask(commandBuffer,"lektion02");
+                    saveProgressToSession('lektion02');
                     commandBuffer = ""; // Reset the buffer
                     cursorPosition = 0; // Reset the cursor
                 } else if (data === '\u001b[D') { // Left arrow (ANSI escape code)
